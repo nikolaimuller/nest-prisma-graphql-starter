@@ -1,0 +1,145 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type OperationError {
+  message: String!
+  code: ErrorCode!
+}
+
+"""Operation error codes"""
+enum ErrorCode {
+  INPUT_ERROR
+  ALREADY_EXISTS
+  AUTH_ERROR
+  NOT_FOUND
+  SERVER_ERROR
+  UNKNOWN_ERROR
+}
+
+type PageInfo {
+  hasNextPage: Boolean!
+  hasPreviousPage: Boolean!
+  startCursor: String
+  endCursor: String
+}
+
+type User {
+  id: String!
+  email: String!
+  name: String!
+}
+
+type UserEdge {
+  cursor: String!
+  node: User!
+}
+
+type UserConnection {
+  edges: [UserEdge!]!
+  pageInfo: PageInfo!
+  totalCount: Int!
+}
+
+type Query {
+  user(userId: String!): User
+  users(
+    """Paginate before opaque cursor"""
+    before: String
+
+    """Paginate after opaque cursor"""
+    after: String
+
+    """Paginate first"""
+    first: Float
+
+    """Paginate last"""
+    last: Float
+    orderBy: UserOrder
+    filter: UserFilter
+  ): UserConnection!
+}
+
+input UserOrder {
+  direction: OrderDirection!
+  field: UserOrderField!
+}
+
+"""
+Possible directions in which to order a list of items when provided an `orderBy` argument.
+"""
+enum OrderDirection {
+  ASC
+  DESC
+}
+
+"""Properties by which user connections can be ordered."""
+enum UserOrderField {
+  id
+  createdAt
+  updatedAt
+  email
+}
+
+input UserFilter {
+  email: String
+  name: String
+}
+
+type Mutation {
+  createUser(data: CreateUserInput!): CreateUserResultUnion!
+  updateUser(userId: String!, data: UpdateUserInput!): UpdateUserResultUnion!
+  deleteUser(userId: String!): DeleteUserResultUnion!
+}
+
+union CreateUserResultUnion = CreateUserSuccessResult | CreateUserFailedResult
+
+type CreateUserSuccessResult {
+  user: User!
+  status: Status!
+}
+
+"""Operation status"""
+enum Status {
+  Success
+  Failed
+}
+
+type CreateUserFailedResult {
+  error: OperationError!
+  status: Status!
+}
+
+input CreateUserInput {
+  email: String!
+  name: String!
+}
+
+union UpdateUserResultUnion = UpdateUserSuccessResult | UpdateUserFailedResult
+
+type UpdateUserSuccessResult {
+  user: User!
+  status: Status!
+}
+
+type UpdateUserFailedResult {
+  error: OperationError!
+  status: Status!
+}
+
+input UpdateUserInput {
+  email: String
+  name: String
+}
+
+union DeleteUserResultUnion = DeleteUserSuccessResult | DeleteUserFailedResult
+
+type DeleteUserSuccessResult {
+  user: User!
+  status: Status!
+}
+
+type DeleteUserFailedResult {
+  error: OperationError!
+  status: Status!
+}
